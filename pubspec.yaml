@@ -1,0 +1,18 @@
+name: Quarentena_Tech
+description: Aplicação para a quarentena tech, que é um projeto liderado pelo o Marco Bruno da CollabCode com o intuito de divulgar conteúdos relacionado ao mundo da tecnologia.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
