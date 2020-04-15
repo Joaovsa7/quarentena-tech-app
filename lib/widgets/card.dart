@@ -74,6 +74,7 @@ class ChannelCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 height: 1.5,
+                color: Colors.black,
               ),
             ),
           )

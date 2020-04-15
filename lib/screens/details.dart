@@ -117,7 +117,10 @@ class HeroDetail extends StatelessWidget {
                               child: Text(
                                 eventData.content,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(height: 1.5),
+                                style: TextStyle(
+                                  height: 1.5,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                             RaisedButton(
