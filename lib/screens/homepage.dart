@@ -1,6 +1,7 @@
 import 'package:Quarentena_Tech/models/events.dart';
 import 'package:Quarentena_Tech/services/events.dart';
 import 'package:Quarentena_Tech/widgets/card.dart';
+import 'package:Quarentena_Tech/widgets/logo.dart';
 import 'package:Quarentena_Tech/widgets/menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,10 +40,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  List filterList([List array, dynamic parameter, Function callback]) {
-    return array
-        .where(callback != null ? callback : (value) => value != parameter)
-        .toList();
+  List filterList([List array, dynamic parameter]) {
+    return array.where((value) => value != parameter).toList();
   }
 
   void addFilter(String title) {
@@ -86,23 +85,10 @@ class _HomePageState extends State<HomePage> {
                 flex: 1,
                 child: Container(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset(
-                        'images/logo.png',
-                        width: 220,
-                      ),
-                      Switch(
-                        value: darkMode,
-                        activeTrackColor: Colors.black,
-                        activeColor: Colors.purple,
-                        onChanged: (value) {
-                          setState(() {
-                            darkMode = value;
-                          });
-                        },
-                      )
+                      Logo(),
                     ],
                   ),
                 ),
