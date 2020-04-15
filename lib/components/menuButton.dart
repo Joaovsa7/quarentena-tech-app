@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MenuButton extends StatefulWidget {
-  String title;
-  Function onTap;
+  final String title;
+  final Function fetchData;
 
   MenuButton({
     Key key,
     this.title,
-    this.onTap,
+    this.fetchData,
   }) : super(key: key);
 
   @override
@@ -15,7 +15,8 @@ class MenuButton extends StatefulWidget {
 }
 
 class _MenuButtonState extends State<MenuButton> {
-  bool isActive = false;
+  bool isSelected = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,9 +28,16 @@ class _MenuButtonState extends State<MenuButton> {
   }
 
   @override
+  void onTap() {
+    setState(() {
+      isSelected = !isSelected;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25,
+      height: 15,
       margin: EdgeInsets.only(right: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
@@ -37,24 +45,22 @@ class _MenuButtonState extends State<MenuButton> {
         ),
         border: Border.all(
           color:
-              isActive == true ? Colors.white : Theme.of(context).buttonColor,
+              isSelected == true ? Colors.white : Theme.of(context).buttonColor,
         ),
       ),
       child: FlatButton(
-        color: isActive == false ? Colors.white : Theme.of(context).buttonColor,
+        color:
+            isSelected == false ? Colors.white : Theme.of(context).buttonColor,
         child: Text(
           widget.title,
           style: TextStyle(
-            color:
-                isActive == true ? Colors.white : Theme.of(context).buttonColor,
-            fontSize: 12,
+            color: isSelected == true
+                ? Colors.white
+                : Theme.of(context).buttonColor,
+            fontSize: 10,
           ),
         ),
-        onPressed: () {
-          setState(() {
-            isActive = !isActive;
-          });
-        },
+        onPressed: onTap,
       ),
     );
   }
