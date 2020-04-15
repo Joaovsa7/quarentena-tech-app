@@ -1,24 +1,16 @@
 import 'package:Quarentena_Tech/models/events.dart';
 import 'package:Quarentena_Tech/screens/details.dart';
+import 'package:Quarentena_Tech/staticData/channelColors.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
-
-Map<String, Color> channelsMap = {
-  'youtube': Colors.red,
-  'twitch': Colors.purple,
-  'cursos': Colors.green,
-  'comunidade': Colors.blue,
-};
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ChannelCard extends StatelessWidget {
-  final String imageUrl;
   final String title;
   final int heroTag;
   final Events eventData;
 
   ChannelCard({
     Key key,
-    this.imageUrl,
     this.title,
     this.heroTag,
     this.eventData,
@@ -26,6 +18,7 @@ class ChannelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSvgImage = eventData.logo.contains('.svg');
     return Container(
       padding: EdgeInsets.all(5),
       child: Column(
@@ -47,17 +40,20 @@ class ChannelCard extends StatelessWidget {
                   Container(
                     width: 120,
                     height: 120,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        imageUrl,
-                      ),
-                    ),
+                    child: isSvgImage
+                        ? ClipOval(
+                            child: SvgPicture.network(eventData.logo),
+                          )
+                        : CircleAvatar(
+                            backgroundImage: NetworkImage(eventData.logo),
+                          ),
                   ),
                   Positioned(
                     right: 0,
+                    bottom: 0,
                     child: Container(
                       padding: EdgeInsets.all(5),
-                      color: channelsMap[eventData.categories[0]],
+                      color: channelsColorMap[eventData.categories[0]],
                       child: Text(
                         eventData.categories[0],
                         style: TextStyle(

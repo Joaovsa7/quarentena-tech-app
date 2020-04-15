@@ -28,13 +28,6 @@ class _MenuButtonState extends State<MenuButton> {
   }
 
   @override
-  void onTap() {
-    setState(() {
-      isSelected = !isSelected;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: 15,
@@ -60,7 +53,12 @@ class _MenuButtonState extends State<MenuButton> {
             fontSize: 10,
           ),
         ),
-        onPressed: onTap,
+        onPressed: () {
+          setState(() {
+            isSelected = !isSelected;
+          });
+          widget.fetchData(widget.title);
+        },
       ),
     );
   }

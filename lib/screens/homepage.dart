@@ -13,7 +13,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _eventsService = new EventsService();
   List<Events> _events = [];
+  List<String> _filterBy = [];
   bool isLoading;
+  bool darkMode = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,10 +33,28 @@ class _HomePageState extends State<HomePage> {
       isLoading = true;
     });
     var events = await _eventsService.getAll();
-    if (events.length > 0) {
+    setState(() {
+      _events = events;
+      isLoading = false;
+    });
+  }
+
+  List filterList([List array, dynamic parameter, Function callback]) {
+    return array
+        .where(callback != null ? callback : (value) => value != parameter)
+        .toList();
+  }
+
+  void addFilter(String title) {
+    var loweredTitle = title.toLowerCase();
+    if (_filterBy.contains(loweredTitle)) {
+      List newFilteredList = filterList(_filterBy, loweredTitle);
       setState(() {
-        _events = events;
-        isLoading = false;
+        _filterBy = newFilteredList;
+      });
+    } else {
+      setState(() {
+        _filterBy.add(loweredTitle);
       });
     }
   }
@@ -43,10 +64,17 @@ class _HomePageState extends State<HomePage> {
     if (isLoading) {
       return Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.transparent,
+          ),
         ),
       );
     }
+
+    bool hasFilter = _filterBy.length > 0;
+    List filteredResults = _events
+        .where((event) => _filterBy.contains(event.categories[0]))
+        .toList();
 
     return SafeArea(
       child: Scaffold(
@@ -65,8 +93,15 @@ class _HomePageState extends State<HomePage> {
                         'images/logo.png',
                         width: 220,
                       ),
-                      Icon(
-                        Icons.ac_unit,
+                      Switch(
+                        value: darkMode,
+                        activeTrackColor: Colors.black,
+                        activeColor: Colors.purple,
+                        onChanged: (value) {
+                          setState(() {
+                            darkMode = value;
+                          });
+                        },
                       )
                     ],
                   ),
@@ -79,18 +114,23 @@ class _HomePageState extends State<HomePage> {
                   width: MediaQuery.of(context).size.width,
                   child: GridView.count(
                     crossAxisCount: 2,
-                    children: List.generate(_events.length, (index) {
-                      Events event = _events[index];
-                      return ChannelCard(
-                        imageUrl: event.logo,
-                        heroTag: index,
-                        eventData: event,
-                      );
-                    }),
+                    children: List.generate(
+                      hasFilter ? filteredResults.length : _events.length,
+                      (index) {
+                        Events event =
+                            hasFilter ? filteredResults[index] : _events[index];
+                        return ChannelCard(
+                          heroTag: index,
+                          eventData: event,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-              Menu(),
+              Menu(
+                callback: addFilter,
+              ),
             ],
           ),
         ),
