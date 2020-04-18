@@ -1,11 +1,8 @@
 import 'package:Quarentena_Tech/services/sharedPref.dart';
+import 'package:Quarentena_Tech/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:Quarentena_Tech/screens/about.dart';
 import 'package:Quarentena_Tech/screens/homepage.dart';
-
-Color hexToColor(String code) {
-  return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-}
 
 class QuarentenaTech extends StatefulWidget {
   @override
@@ -13,15 +10,24 @@ class QuarentenaTech extends StatefulWidget {
 }
 
 class _QuarentenaTechState extends State<QuarentenaTech> {
-  final Color mainColor = hexToColor('#F25A70');
   final SharedPref _sharedPref = new SharedPref();
+  bool darkMode = false;
   bool redirect = false;
 
   void redirectUser() async {
-    var sharedPref = await _sharedPref.read('redirect');
-    if (sharedPref) {
+    var redirectState = await _sharedPref.read('redirect');
+    if (redirectState) {
       setState(() {
         redirect = true;
+      });
+    }
+  }
+
+  void getDarkModeStateInSharedPref() async {
+    var darkModeState = await _sharedPref.read('darkMode');
+    if (darkModeState) {
+      setState(() {
+        darkMode = darkModeState;
       });
     }
   }
@@ -30,6 +36,7 @@ class _QuarentenaTechState extends State<QuarentenaTech> {
   void initState() {
     super.initState();
     redirectUser();
+    getDarkModeStateInSharedPref();
   }
 
   @override
@@ -37,25 +44,31 @@ class _QuarentenaTechState extends State<QuarentenaTech> {
     super.dispose();
   }
 
+  void handleTheme(bool value) async {
+    await _sharedPref.save('redirect', value);
+    setState(() {
+      darkMode = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    ThemeData appTheme = darkMode == true ? themes['dark'] : themes['default'];
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Quarentena Tech',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-        iconTheme: IconThemeData(
-          color: mainColor,
-        ),
-        textTheme: TextTheme(
-          body1: TextStyle(color: mainColor),
-        ),
-        buttonColor: mainColor,
-        fontFamily: 'PressStart2P',
-      ),
-      home: redirect ? HomePage() : About(),
+      theme: appTheme,
+      home: redirect
+          ? HomePage(
+              handleTheme: handleTheme,
+              darkModeState: darkMode,
+            )
+          : About(),
       routes: {
-        '/home': (context) => HomePage(),
+        '/home': (context) => HomePage(
+              handleTheme: handleTheme,
+              darkModeState: darkMode,
+            ),
       },
     );
   }

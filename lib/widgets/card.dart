@@ -3,6 +3,7 @@ import 'package:Quarentena_Tech/screens/details.dart';
 import 'package:Quarentena_Tech/staticData/channelColors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class ChannelCard extends StatelessWidget {
   final String title;
@@ -40,13 +41,14 @@ class ChannelCard extends StatelessWidget {
                   Container(
                     width: 120,
                     height: 120,
-                    child: isSvgImage
-                        ? ClipOval(
-                            child: SvgPicture.network(eventData.logo),
-                          )
-                        : CircleAvatar(
-                            backgroundImage: NetworkImage(eventData.logo),
-                          ),
+                    child: ClipOval(
+                      child: isSvgImage
+                          ? SvgPicture.network(eventData.logo)
+                          : FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: eventData.logo,
+                            ),
+                    ),
                   ),
                   Positioned(
                     right: 0,
@@ -71,11 +73,7 @@ class ChannelCard extends StatelessWidget {
             margin: EdgeInsets.only(top: 15),
             child: Text(
               eventData.title,
-              style: TextStyle(
-                fontSize: 12,
-                height: 1.5,
-                color: Colors.black,
-              ),
+              style: Theme.of(context).textTheme.headline,
             ),
           )
         ],

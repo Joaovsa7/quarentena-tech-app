@@ -7,16 +7,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  final Function handleTheme;
+  bool darkModeState;
+  HomePage({
+    Key key,
+    this.handleTheme,
+    this.darkModeState,
+  }) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  var _eventsService = new EventsService();
+  EventsService _eventsService = new EventsService();
   List<Events> _events = [];
   List<String> _filterBy = [];
   bool isLoading;
-  bool darkMode = false;
 
   @override
   void initState() {
@@ -33,7 +40,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isLoading = true;
     });
-    var events = await _eventsService.getAll();
+
+    List<Events> events = await _eventsService.getAll();
     setState(() {
       _events = events;
       isLoading = false;
@@ -44,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     return array.where((value) => value != parameter).toList();
   }
 
-  void addFilter(String title) {
+  void handleFilter(String title) {
     var loweredTitle = title.toLowerCase();
     if (_filterBy.contains(loweredTitle)) {
       List newFilteredList = filterList(_filterBy, loweredTitle);
@@ -60,16 +68,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-      );
-    }
-
     bool hasFilter = _filterBy.length > 0;
     List filteredResults = _events
         .where((event) => _filterBy.contains(event.categories[0]))
@@ -77,45 +75,62 @@ class _HomePageState extends State<HomePage> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Container(
-          margin: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Logo(),
-                    ],
-                  ),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Hero(
+                      tag: 'logo',
+                      child: Logo(),
+                    ),
+                    Switch(
+                      value: widget.darkModeState,
+                      onChanged: (value) {
+                        widget.handleTheme(value);
+                      },
+                      activeTrackColor: Theme.of(context).indicatorColor,
+                      activeColor: Theme.of(context).toggleableActiveColor,
+                      inactiveThumbColor: Colors.black,
+                    )
+                  ],
                 ),
               ),
-              Flexible(
-                flex: 10,
+              Expanded(
+                flex: 1,
                 child: Container(
-                  margin: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.all(10),
                   width: MediaQuery.of(context).size.width,
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    children: List.generate(
-                      hasFilter ? filteredResults.length : _events.length,
-                      (index) {
-                        Events event =
-                            hasFilter ? filteredResults[index] : _events[index];
-                        return ChannelCard(
-                          heroTag: index,
-                          eventData: event,
-                        );
-                      },
-                    ),
-                  ),
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.transparent,
+                          ),
+                        )
+                      : GridView.count(
+                          crossAxisCount: 2,
+                          children: List.generate(
+                            hasFilter ? filteredResults.length : _events.length,
+                            (index) {
+                              Events event = hasFilter
+                                  ? filteredResults[index]
+                                  : _events[index];
+                              return ChannelCard(
+                                heroTag: index,
+                                eventData: event,
+                              );
+                            },
+                          ),
+                        ),
                 ),
               ),
               Menu(
-                callback: addFilter,
+                handleFilter: handleFilter,
               ),
             ],
           ),

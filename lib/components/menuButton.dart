@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class MenuButton extends StatefulWidget {
   final String title;
-  final Function fetchData;
+  final Function onTap;
 
   MenuButton({
     Key key,
     this.title,
-    this.fetchData,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -36,10 +36,7 @@ class _MenuButtonState extends State<MenuButton> {
         borderRadius: BorderRadius.all(
           Radius.circular(4),
         ),
-        border: Border.all(
-          color:
-              isSelected == true ? Colors.white : Theme.of(context).buttonColor,
-        ),
+        border: Border.all(color: Theme.of(context).primaryColor),
       ),
       child: FlatButton(
         color:
@@ -48,8 +45,8 @@ class _MenuButtonState extends State<MenuButton> {
           widget.title,
           style: TextStyle(
             color: isSelected == true
-                ? Colors.white
-                : Theme.of(context).buttonColor,
+                ? Theme.of(context).accentColor
+                : Theme.of(context).primaryColorDark,
             fontSize: 10,
           ),
         ),
@@ -57,7 +54,7 @@ class _MenuButtonState extends State<MenuButton> {
           setState(() {
             isSelected = !isSelected;
           });
-          widget.fetchData(widget.title);
+          widget.onTap(widget.title);
         },
       ),
     );

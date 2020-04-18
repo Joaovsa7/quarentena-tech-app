@@ -21,10 +21,11 @@ class HeroDetail extends StatelessWidget {
     bool isSvgImage = eventData.logo.contains('.svg');
     Color channelColor = channelsColorMap[eventData.categories[0]];
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: <Widget>[
           Flexible(
-            flex: 3,
+            flex: 1,
             child: Container(
               height: MediaQuery.of(context).size.height / 2.5,
               color: channelColor,
@@ -42,7 +43,7 @@ class HeroDetail extends StatelessWidget {
           Flexible(
             flex: 2,
             child: Container(
-              color: Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
@@ -80,8 +81,8 @@ class HeroDetail extends StatelessWidget {
                                 width: 180,
                                 child: isSvgImage
                                     ? SvgPicture.network(eventData.logo)
-                                    : CircleAvatar(
-                                        backgroundImage: NetworkImage(
+                                    : ClipOval(
+                                        child: Image.network(
                                           eventData.logo,
                                         ),
                                       ),
@@ -96,7 +97,7 @@ class HeroDetail extends StatelessWidget {
                     top: 100,
                     width: MediaQuery.of(context).size.width,
                     child: Container(
-                      height: 300,
+                      height: MediaQuery.of(context).size.height / 2,
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,10 +118,7 @@ class HeroDetail extends StatelessWidget {
                               child: Text(
                                 eventData.content,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  height: 1.5,
-                                  color: Colors.black,
-                                ),
+                                style: Theme.of(context).textTheme.subtitle,
                               ),
                             ),
                             RaisedButton(
@@ -145,6 +143,14 @@ class HeroDetail extends StatelessWidget {
                                 Share.share(eventData.url,
                                     subject: 'Conheça o canal');
                               },
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                                size: 36,
+                                color: channelColor,
+                              ),
+                              onPressed: () => Navigator.pop(context),
                             ),
                           ],
                         ),

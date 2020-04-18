@@ -12,9 +12,12 @@ class About extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Logo(),
+          Hero(
+            tag: 'logo',
+            child: Logo(),
+          ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+            padding: EdgeInsets.all(20),
             child: Text(
               'Nesse momento complicado que estamos passando, felizmente têm muitas pessoas, comunidades e empresas realizando pequenos eventos, 100% online e de graça pra galera. A comunidade da CollabCode criou esse site com o objetivo de juntar todas essas iniciativas maravilhosas que estão nos ajudando a passar por essa crise de uma forma mais feliz!',
               style: TextStyle(
@@ -31,16 +34,11 @@ class About extends StatelessWidget {
               color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () async {
-              _sharedPref.save('redirect', true);
-              return Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-                ModalRoute.withName('/home'),
-              );
+              await _sharedPref.save('redirect', true);
+              return Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/home', (Route<dynamic> route) => false);
             },
-          )
+          ),
         ],
       ),
     );
