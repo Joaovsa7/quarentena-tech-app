@@ -1,6 +1,9 @@
-# quarentena_tech_app
+# Quarentena Tech APP
 
-A new Flutter project.
+Project based in [Quarentena tech](https://quarentena.tech)
+
+# Screens
+![Screens of this app](https://i.imgur.com/NvuztnV.png)
 
 ## Getting Started
 
