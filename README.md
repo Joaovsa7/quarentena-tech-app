@@ -3,15 +3,7 @@
 Project based in [Quarentena tech](https://quarentena.tech)
 
 # Screens
-![About page](https://i.imgur.com/sGTkEZP.png)
-![Home screen](https://i.imgur.com/Nr0RCTO.png)
-![Home screen with filter](https://i.imgur.com/fXeQJA0.png)
-![Details page](https://i.imgur.com/AtlzRY5.png)
-
-# Dark mode
-![Home screen dark mode](https://i.imgur.com/kB2AfPr.png)
-![Home screen with filter](https://i.imgur.com/4KeUb3K.png)
-![Details page dark mode](https://i.imgur.com/tm7KJCW.png)
+![Screens of this app](https://i.imgur.com/NvuztnV.png)
 
 ## Getting Started
 
